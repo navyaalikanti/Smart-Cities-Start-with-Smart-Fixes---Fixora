@@ -8,7 +8,7 @@ Fixora is a civic issue reporting platform. Citizens report problems in their ci
 
 ## Architecture
 
-![Fixora architecture](docs/architecture.png)
+![Fixora architecture](docs/Fixora-Architecture.png)
 
 ---
 
