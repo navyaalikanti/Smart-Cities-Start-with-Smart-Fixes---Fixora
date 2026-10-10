@@ -214,3 +214,5 @@
 .sidebar-collapsed .sidebar .brand-mark svg{width:22px;height:22px}
 .citizen-home .dashboard{padding-top:38px}
 @media(max-width:720px){.citizen-home .dashboard{padding-top:38px}}
+.sidebar-collapsed .sidebar .brand-mark{width:40px;height:40px;flex:0 0 40px}
+.sidebar-collapsed .sidebar .brand-mark svg{width:26px;height:26px}
