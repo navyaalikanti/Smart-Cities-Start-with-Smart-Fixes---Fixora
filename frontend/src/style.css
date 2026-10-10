@@ -74,3 +74,8 @@
 .landing .hero-copy{margin-left:38px}
 @media(max-width:720px){.landing .hero{height:100vh;height:100svh;min-height:100vh;min-height:100svh}.landing .hero-copy{margin-left:0;padding-left:24px}}
 @media(max-width:390px){.landing .hero-copy{padding-left:14px}}
+
+/* Swap the landing section surfaces */
+.landing .why-section{background:#FFFFFF}
+.landing .landing-footer{position:relative;isolation:isolate;background:#F7F9FA}
+.landing .landing-footer::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:#F7F9FA}
