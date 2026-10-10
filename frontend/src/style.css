@@ -216,3 +216,6 @@
 @media(max-width:720px){.citizen-home .dashboard{padding-top:38px}}
 .sidebar-collapsed .sidebar .brand-mark{width:40px;height:40px;flex:0 0 40px}
 .sidebar-collapsed .sidebar .brand-mark svg{width:26px;height:26px}
+/* Dashboard section headings now lead each page after the shared title row is removed */
+.dashboard{padding-top:38px}
+@media(max-width:720px){.dashboard,.app-shell.sidebar-collapsed .dashboard{padding-top:38px}}
