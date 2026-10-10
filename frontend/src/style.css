@@ -202,3 +202,10 @@
 .sidebar-collapsed .sidebar .logout{width:100%;height:42px}
 .app-shell.sidebar-collapsed .dashboard{margin-left:88px;max-width:calc(100vw - 88px)}
 @media(max-width:720px){.sidebar{width:252px}.sidebar-collapsed .sidebar{width:88px}.dashboard,.app-shell.sidebar-collapsed .dashboard{margin-left:88px;max-width:calc(100vw - 88px);padding-left:12px;padding-right:12px}.menu-button{display:none}}
+/* Keep the sidebar control borderless; the Fixora wrench reopens the icon rail */
+.sidebar-toggle{border:0;background:transparent}
+.sidebar .logout{border:0;background:transparent}
+.sidebar .logout:hover{background:var(--accent)}
+.sidebar-brand-button{border:0;padding:0;cursor:pointer}
+.sidebar-brand-button:hover{background:#d8eaf1}
+.citizen-home .dash-header{display:none}
