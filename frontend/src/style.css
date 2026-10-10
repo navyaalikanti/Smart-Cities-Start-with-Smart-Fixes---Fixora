@@ -247,3 +247,9 @@
 
 .official-overview-intro{align-items:center;margin-bottom:24px}.official-overview-intro p{margin:8px 0 0;color:var(--text-secondary);line-height:1.6}
 @media(max-width:640px){.official-overview-intro{align-items:flex-start;flex-direction:column}}
+
+/* Keep the collapsed Fixora mark visually aligned with the navigation icon rail. */
+.sidebar-collapsed .sidebar .sidebar-brand-button{width:42px;height:42px;flex:0 0 42px;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;color:var(--text-secondary)}
+.sidebar-collapsed .sidebar .sidebar-brand-button svg{width:20px;height:20px;stroke-width:2}
+.sidebar-collapsed .sidebar .sidebar-brand-button:hover{background:var(--accent);border-radius:8px;color:var(--primary-hover)}
+
