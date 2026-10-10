@@ -68,3 +68,9 @@
 .landing .landing-footer .footer-socials span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .landing .landing-footer .footer-socials svg{color:var(--primary)}
 @media(max-width:720px){.landing .landing-nav{height:62px}.landing .landing-nav .brand-mark{width:36px;height:36px}.landing .landing-nav .button{height:38px}.landing .landing-footer .footer-socials{gap:12px}}
+
+/* Full-height hero; keep the report-route-resolve band after key features */
+.landing .hero{height:100vh;height:100svh;min-height:100vh;min-height:100svh}
+.landing .hero-copy{margin-left:38px}
+@media(max-width:720px){.landing .hero{height:100vh;height:100svh;min-height:100vh;min-height:100svh}.landing .hero-copy{margin-left:0;padding-left:24px}}
+@media(max-width:390px){.landing .hero-copy{padding-left:14px}}
