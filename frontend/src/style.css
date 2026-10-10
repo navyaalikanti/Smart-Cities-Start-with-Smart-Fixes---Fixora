@@ -253,3 +253,6 @@
 .sidebar-collapsed .sidebar .sidebar-brand-button svg{width:20px;height:20px;stroke-width:2}
 .sidebar-collapsed .sidebar .sidebar-brand-button:hover{background:var(--accent);border-radius:8px;color:var(--primary-hover)}
 
+
+.worker-welcome{margin:0 0 24px}.worker-welcome h2{font-size:32px;letter-spacing:-.8px;margin:8px 0}.worker-welcome p{font-size:17px;line-height:1.6;color:var(--text-secondary);max-width:580px;margin:0}
+
