@@ -49,3 +49,13 @@
 .landing .landing-footer{height:50px}
 @media(max-width:720px){.landing .landing-nav{position:fixed;top:10px;background:rgba(255,255,255,.38);border-color:rgba(255,255,255,.48)}.landing .hero{min-height:88vh;min-height:88svh;padding-left:16px;padding-right:16px}.landing .landing-footer{height:auto;min-height:50px;padding:12px 0}}
 @media(max-width:390px){.landing .hero{padding-left:14px;padding-right:14px}}
+
+/* Fit the hero and report/route/resolve strip within one viewport */
+.landing .landing-nav{width:min(1040px,calc(100% - 80px))}
+.landing .hero{height:calc(100svh - 69px);min-height:calc(100svh - 69px)}
+.landing .trust-strip{height:69px;box-sizing:border-box}
+.landing .trust-inner{height:67px}
+.landing .landing-footer .footer-contact{color:var(--text-secondary);font-size:14px}
+.landing .landing-footer .footer-contact b{color:var(--text);font-weight:600}
+@media(max-width:720px){.landing .landing-nav{width:calc(100% - 44px)}.landing .hero{height:calc(100svh - 62px);min-height:calc(100svh - 62px)}.landing .trust-strip{height:62px}.landing .trust-inner{height:60px}.landing .landing-footer .footer-contact{width:auto}}
+@media(max-width:390px){.landing .landing-nav{width:calc(100% - 34px)}}
