@@ -79,3 +79,24 @@
 .landing .why-section{background:#FFFFFF}
 .landing .landing-footer{position:relative;isolation:isolate;background:#F7F9FA}
 .landing .landing-footer::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);background:#F7F9FA}
+
+/* Keep registration as compact as login by using the wider dialog efficiently */
+.auth-modal{box-sizing:border-box;height:min(480px,calc(100dvh - 32px))}
+.auth-modal.register-modal{width:min(820px,100%);display:grid;grid-template-columns:minmax(170px,.78fr) minmax(0,1.22fr);grid-template-rows:auto auto auto 1fr auto;column-gap:24px;align-items:center;overflow-y:auto}
+.register-modal>.brand-mark.small{grid-column:1;grid-row:1;margin:0 auto 8px}
+.register-modal>.eyebrow{grid-column:1;grid-row:2;margin-bottom:4px}
+.register-modal>h2{grid-column:1;grid-row:3;font-size:25px;margin:0 0 12px}
+.register-modal>.role-switch{grid-column:1;grid-row:4;width:100%;margin-bottom:0}
+.register-modal>.modal-switch{grid-column:1;grid-row:5;font-size:14px;margin:12px 0 0}
+.register-modal>.auth-form{grid-column:2;grid-row:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;align-content:center;min-width:0}
+.register-modal .auth-form label{gap:4px;font-size:14px}
+.register-modal .auth-form input,.register-modal .auth-form select{box-sizing:border-box;min-width:0;height:39px;padding:8px 10px;font-size:14px}
+.register-modal .registration-location,.register-modal .auth-error,.register-modal .auth-form>.button{grid-column:1/-1}
+.register-modal .registration-location{gap:6px;margin:0}
+.register-modal .registration-location-head b{font-size:14px}
+.register-modal .registration-location-head small{font-size:12px}
+.register-modal .registration-location-head .button{height:30px;font-size:12px;padding:0 7px}
+.register-modal .registration-map{height:96px}
+.register-modal .auth-form>.button{height:40px}
+@media(max-width:720px){.auth-modal.register-modal{width:min(620px,100%);grid-template-columns:minmax(135px,.72fr) minmax(0,1.28fr);column-gap:16px;padding:24px 18px}.register-modal>h2{font-size:22px}.register-modal .auth-form{gap:8px}.register-modal .registration-map{height:84px}}
+@media(max-width:390px){.auth-modal.register-modal{display:block;overflow-y:auto;padding:24px 18px}.register-modal>.brand-mark.small{margin:0 auto 8px}.register-modal>.role-switch{margin-bottom:14px}.register-modal>.modal-switch{margin:12px 0 0}.register-modal>.auth-form{grid-template-columns:1fr;gap:10px}.register-modal .registration-location{grid-column:auto}.register-modal .registration-map{height:110px}}
