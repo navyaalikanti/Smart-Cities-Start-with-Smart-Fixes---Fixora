@@ -219,3 +219,23 @@
 /* Dashboard section headings now lead each page after the shared title row is removed */
 .dashboard{padding-top:38px}
 @media(max-width:720px){.dashboard,.app-shell.sidebar-collapsed .dashboard{padding-top:38px}}
+/* More compact spacing for the citizen My issues screen */
+.citizen-mine .dashboard{padding-top:16px}
+.citizen-mine .section-intro{margin:0 0 12px;gap:12px}
+.citizen-mine .section-intro h2{font-size:23px;margin:3px 0}
+.citizen-mine .section-intro p{font-size:14px;line-height:1.4;margin:0}
+.citizen-mine .toolbar{gap:7px;margin-bottom:10px}
+.citizen-mine .search-field{height:36px}
+.citizen-mine .toolbar select{height:36px}
+.citizen-mine .issue-list{gap:7px}
+.citizen-mine .issue-card{padding:10px;border-radius:9px}
+.citizen-mine .issue-card-main{gap:10px}
+.citizen-mine .issue-thumb{width:48px;height:48px;flex-basis:48px}
+.citizen-mine .issue-info h3{font-size:17px;line-height:1.2;margin-bottom:2px}
+.citizen-mine .issue-info>p{font-size:14px;line-height:1.4;margin-bottom:5px}
+.citizen-mine .issue-meta{gap:8px}
+.citizen-mine .issue-meta span{font-size:12px}
+.citizen-mine .updates-line{margin-top:7px;padding:7px 0 0 58px;gap:8px}
+.citizen-mine .updates-line span{font-size:12px}
+@media(max-height:760px){.citizen-mine .dashboard{padding-top:10px}.citizen-mine .section-intro{margin-bottom:8px}.citizen-mine .issue-info>p{-webkit-line-clamp:1}}
+@media(max-width:720px){.citizen-mine .dashboard{padding-top:12px}.citizen-mine .section-intro h2{font-size:21px}.citizen-mine .issue-card{padding:8px}.citizen-mine .issue-card-main{gap:8px}.citizen-mine .issue-thumb{width:42px;height:42px;flex-basis:42px}.citizen-mine .updates-line{padding-left:0}}
