@@ -41,3 +41,11 @@
 @media(max-width:950px){.landing .hero{padding-left:6vw;padding-right:6vw;background-position:58% center}.landing .hero-copy{width:min(560px,66%)} }
 @media(max-width:720px){.landing .landing-nav{top:10px;width:calc(100% - 24px);height:56px;padding:0 12px;border-radius:15px}.landing .landing-nav .brand{font-size:20px}.landing .landing-nav .brand-mark{width:33px;height:33px}.landing .landing-nav .button{height:35px;padding:0 10px;font-size:13px}.landing .hero{min-height:100vh;min-height:100svh;padding:91px 24px 42px;align-items:center;background-image:linear-gradient(90deg,rgba(255,255,255,.96),rgba(255,255,255,.86) 56%,rgba(255,255,255,.48)),url("../Minimalist%20Blue%20Isometric%20City%20Map.png");background-position:62% center}.landing .hero-copy{width:100%;max-width:550px;padding:0}.landing .hero h1{font-size:clamp(42px,10vw,54px);letter-spacing:-1.7px}.landing .hero-copy>p{font-size:16px}.landing .hero-actions{flex-wrap:wrap}.landing .hero-assurance{font-size:13px}.landing .trust-inner{height:60px}}
 @media(max-width:390px){.landing .landing-nav{width:calc(100% - 18px);padding:0 9px}.landing .landing-nav .brand{font-size:18px}.landing .landing-nav .brand-mark{width:30px;height:30px}.landing .landing-nav .button{font-size:12px;padding:0 8px}.landing .hero{padding-left:20px;padding-right:20px}.landing .hero h1{font-size:40px}}
+
+/* Landing refinements: fixed glass navigation and tighter vertical rhythm */
+.landing .landing-nav{position:fixed;top:12px;background:rgba(255,255,255,.38);border-color:rgba(255,255,255,.48);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 5px 20px rgba(17,24,39,.045)}
+.landing .hero{min-height:88vh;min-height:88svh;padding-left:max(20px,calc((100vw - 1400px)/2));padding-right:max(5vw,calc((100vw - 1160px)/2))}
+.landing .hero-copy{padding-left:0}
+.landing .landing-footer{height:50px}
+@media(max-width:720px){.landing .landing-nav{position:fixed;top:10px;background:rgba(255,255,255,.38);border-color:rgba(255,255,255,.48)}.landing .hero{min-height:88vh;min-height:88svh;padding-left:16px;padding-right:16px}.landing .landing-footer{height:auto;min-height:50px;padding:12px 0}}
+@media(max-width:390px){.landing .hero{padding-left:14px;padding-right:14px}}
