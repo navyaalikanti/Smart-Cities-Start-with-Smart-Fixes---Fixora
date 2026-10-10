@@ -156,3 +156,10 @@
 
 .auth-modal:not(.register-modal){height:min(620px,calc(100dvh - 32px));display:flex;flex-direction:column;justify-content:center}
 .citizen-register-modal{height:min(620px,calc(100dvh - 32px))}
+
+.auth-form .password-label{display:flex;align-items:center;gap:6px;min-height:18px}
+.password-hint{position:relative;display:inline-grid;place-items:center;width:18px;height:18px;padding:0;border:0;border-radius:50%;background:var(--accent);color:var(--primary);cursor:help}
+.password-hint svg{width:13px;height:13px}
+.password-hint::after{content:attr(data-tooltip);position:absolute;z-index:30;left:50%;bottom:calc(100% + 7px);width:max-content;max-width:220px;padding:7px 10px;border-radius:7px;background:var(--text);color:#fff;font-size:12px;font-weight:500;line-height:1.4;white-space:normal;opacity:0;visibility:hidden;transform:translate(-50%,3px);transition:opacity .15s ease,transform .15s ease;pointer-events:none}
+.password-hint:hover::after,.password-hint:focus-visible::after{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.register-modal .password-hint{width:17px;height:17px}
