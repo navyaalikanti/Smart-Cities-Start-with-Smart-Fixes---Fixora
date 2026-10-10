@@ -220,14 +220,14 @@
 .dashboard{padding-top:38px}
 @media(max-width:720px){.dashboard,.app-shell.sidebar-collapsed .dashboard{padding-top:38px}}
 /* Compact the citizen report form and map without removing any controls */
-.citizen-report .dashboard{padding-top:16px}
+.citizen-report .dashboard{padding-top:38px}
 .citizen-report .section-intro{margin:0 0 12px;gap:12px}
 .citizen-report .section-intro h2{font-size:23px;margin:3px 0}
 .citizen-report .section-intro p{font-size:14px;line-height:1.4}
 .citizen-report .section-intro .step-tag{font-size:12px;padding:7px 9px}
 .citizen-report .report-layout{gap:12px;align-items:stretch}
 .citizen-report .report-form,.citizen-report .map-card{padding:12px;border-radius:10px}
-.citizen-report .report-form{gap:8px}
+.citizen-report .report-form{gap:8px;min-height:570px;align-content:space-between}
 .citizen-report .report-form>label{gap:4px;font-size:14px}
 .citizen-report .report-form input,.citizen-report .report-form textarea{padding:8px 10px;font-size:14px}
 .citizen-report .report-form textarea{height:78px;min-height:78px;line-height:1.4}
@@ -236,9 +236,9 @@
 .citizen-report .location-inline>span small{font-size:12px}
 .citizen-report .location-inline .button{height:34px;font-size:13px}
 .citizen-report .report-form>.button{height:38px;font-size:14px}
-.citizen-report .map-card{display:flex;flex-direction:column;min-height:380px}
+.citizen-report .map-card{display:flex;flex-direction:column;min-height:570px}
 .citizen-report .map-heading{height:52px;flex:0 0 52px;padding:0 10px}
-.citizen-report .report-map{height:auto;flex:1;min-height:280px}
+.citizen-report .report-map{height:auto;flex:1;min-height:460px}
 .citizen-report .map-note{font-size:12px;margin:6px 0;padding:0 10px}
-@media(max-height:760px){.citizen-report .dashboard{padding-top:10px}.citizen-report .section-intro{margin-bottom:8px}.citizen-report .report-form textarea{height:66px;min-height:66px}.citizen-report .map-card{min-height:340px}.citizen-report .report-map{min-height:245px}}
-@media(max-width:720px){.citizen-report .dashboard{padding-top:12px}.citizen-report .report-layout{gap:9px}.citizen-report .map-card{min-height:330px}.citizen-report .report-map{min-height:250px}.citizen-report .section-intro .step-tag{display:none}}
+@media(max-height:760px){.citizen-report .section-intro{margin-bottom:8px}.citizen-report .report-form textarea{height:66px;min-height:66px}.citizen-report .report-form{min-height:510px}.citizen-report .map-card{min-height:510px}.citizen-report .report-map{min-height:400px}}
+@media(max-width:720px){.citizen-report .dashboard{padding-top:38px}.citizen-report .report-layout{gap:9px}.citizen-report .report-form{min-height:unset;align-content:start}.citizen-report .map-card{min-height:330px}.citizen-report .report-map{min-height:250px}.citizen-report .section-intro .step-tag{display:none}}
