@@ -144,3 +144,15 @@
 .register-modal .auth-form label{gap:2px;font-size:13px}
 .register-modal .auth-form input,.register-modal .auth-form select{height:36px;padding:7px 9px}
 .register-modal .registration-map{min-height:190px}
+
+/* Full-height login and citizen forms with a simple one-field-per-row flow */
+.auth-modal,.auth-modal:not(.register-modal){height:min(560px,calc(100dvh - 32px))}
+.citizen-register-modal .auth-form{grid-template-columns:1fr;gap:13px}
+.citizen-register-modal .auth-form label,.citizen-register-modal .auth-form>.button,.citizen-register-modal .auth-error{grid-column:1}
+@media(max-height:650px){.auth-modal:not(.register-modal){padding:22px 26px}.auth-modal:not(.register-modal) .brand-mark.small{margin-bottom:8px}.auth-modal:not(.register-modal) h2{margin-bottom:12px}.auth-modal:not(.register-modal) .role-switch{margin-bottom:12px}.auth-modal:not(.register-modal) .auth-form{gap:9px}.auth-modal:not(.register-modal) .auth-form input{height:36px;padding:7px 10px}.auth-modal:not(.register-modal) .modal-switch{margin-top:10px}}
+
+.auth-modal:not(.register-modal){height:min(600px,calc(100dvh - 32px))}
+.citizen-register-modal{height:min(600px,calc(100dvh - 32px))}
+
+.auth-modal:not(.register-modal){height:min(620px,calc(100dvh - 32px));display:flex;flex-direction:column;justify-content:center}
+.citizen-register-modal{height:min(620px,calc(100dvh - 32px))}
