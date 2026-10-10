@@ -256,3 +256,13 @@
 
 .worker-welcome{margin:0 0 24px}.worker-welcome h2{font-size:32px;letter-spacing:-.8px;margin:8px 0}.worker-welcome p{font-size:17px;line-height:1.6;color:var(--text-secondary);max-width:580px;margin:0}
 
+
+/* Status colors communicate each report's current state. */
+.status-tag.submitted{background:#e7f1f8;color:#007f9e}
+.status-tag.assigned{background:#eeeafe;color:#6253a8}
+.status-tag.in_progress{background:#fff4d6;color:#946200}
+.status-tag.resolved{background:#e7f5ec;color:#21834a}
+.status-tag.closed{background:#edf0f2;color:#5f6b76}
+.resolution-link{color:#21834a;font-weight:600}
+.resolution-link:hover{color:#176a39;text-decoration:underline}
+
