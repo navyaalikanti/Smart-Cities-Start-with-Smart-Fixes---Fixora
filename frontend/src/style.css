@@ -244,3 +244,6 @@
 @media(max-width:720px){.citizen-report .dashboard{padding-top:38px}.citizen-report .report-layout{gap:9px}.citizen-report .report-form{min-height:unset;align-content:start;padding-bottom:69px}.citizen-report .map-card{min-height:387px}.citizen-report .report-map{min-height:307px}.citizen-report .section-intro .step-tag{display:none}}
 
 .photo-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}.photo-preview-overlay{position:fixed;inset:0;z-index:2200;padding:24px;background:#111827c9;display:grid;place-items:center}.photo-preview-dialog{position:relative;width:min(900px,100%);max-height:calc(100vh - 48px);padding:12px;background:#fff;border-radius:12px;display:grid;place-items:center}.photo-preview-dialog img{display:block;max-width:100%;max-height:calc(100vh - 72px);object-fit:contain;border-radius:7px}.photo-preview-close{position:absolute;top:18px;right:18px;z-index:1;width:36px;height:36px;border:0;border-radius:50%;background:#fff;color:var(--text);display:grid;place-items:center;box-shadow:0 1px 8px #11182730}
+
+.official-overview-intro{align-items:center;margin-bottom:24px}.official-overview-intro p{margin:8px 0 0;color:var(--text-secondary);line-height:1.6}
+@media(max-width:640px){.official-overview-intro{align-items:flex-start;flex-direction:column}}
