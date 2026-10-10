@@ -39,7 +39,7 @@ function App(){
    localStorage.setItem('fixora_token',data.access_token);
    localStorage.setItem('fixora_user',JSON.stringify(data.user));
    setToken(data.access_token);setUser(data.user);setTab('home');setModal(null);setAuthError('');
-   setNotice('Welcome, '+data.user.name);
+   setNotice('');
   } catch(e) {
    const detail=e.response?.data?.detail;
    const message=e.response?.status===404
