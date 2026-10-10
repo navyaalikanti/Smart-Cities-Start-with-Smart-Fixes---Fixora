@@ -59,3 +59,12 @@
 .landing .landing-footer .footer-contact b{color:var(--text);font-weight:600}
 @media(max-width:720px){.landing .landing-nav{width:calc(100% - 44px)}.landing .hero{height:calc(100svh - 62px);min-height:calc(100svh - 62px)}.landing .trust-strip{height:62px}.landing .trust-inner{height:60px}.landing .landing-footer .footer-contact{width:auto}}
 @media(max-width:390px){.landing .landing-nav{width:calc(100% - 34px)}}
+
+/* Taller navigation and social presence in the footer */
+.landing .landing-nav{height:72px}
+.landing .landing-nav .brand-mark{width:40px;height:40px}
+.landing .landing-nav .button{height:42px}
+.landing .landing-footer .footer-socials{display:flex;align-items:center;gap:16px;color:var(--text-secondary);font-size:13px}
+.landing .landing-footer .footer-socials span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.landing .landing-footer .footer-socials svg{color:var(--primary)}
+@media(max-width:720px){.landing .landing-nav{height:62px}.landing .landing-nav .brand-mark{width:36px;height:36px}.landing .landing-nav .button{height:38px}.landing .landing-footer .footer-socials{gap:12px}}
