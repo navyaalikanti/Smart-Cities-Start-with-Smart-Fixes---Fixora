@@ -1,130 +1,124 @@
-# Fixora — Smart city fixes, made visible
+# Fixora
 
-Fixora is a civic issue reporting and response platform. Residents report problems in their city; the right department reviews and assigns the work; field workers document the resolution. Citizens and city teams can follow progress in one place.
+**A smart city starts with smart fixes.**
 
-## What Fixora includes
+Fixora is a civic issue reporting platform. Citizens report problems in their city, the system automatically sends each report to the right department using NLP, officials assign the work to field workers, and workers upload a photo once the issue is fixed.
 
-- Separate registration and sign-in flows for citizens, city officials, and field workers.
-- Department and service-area selection for officials and workers, including a mapped service location.
-- Citizen reports with a title, description, optional photo and address, and a map pin that can use the device's current location.
-- Department queues scoped to service areas, worker assignment, issue status updates, and resolution photos.
-- Citizen report history, citywide report search, issue upvotes, and visibility into report progress.
-- A Leaflet map for city teams, with issue markers that grow darker as reports receive more upvotes.
-- React frontend, FastAPI backend, MongoDB Atlas persistence, and Supabase photo storage.
+---
 
-## NLP-powered department routing
+## Architecture
 
-Citizens never choose a department. `backend/app/nlp_engine.py` runs a trained statistical model:
+![Fixora architecture](docs/architecture.png)
 
-- **Features:** TF-IDF over words and two-word phrases, plus character 3-5 grams (so typos and unseen wording still match).
-- **Model:** multinomial Logistic Regression trained on `backend/app/nlp_seed.py` (about 250 labelled example reports across the ten departments).
-- **Self-improving:** at server start, and after every repair a worker marks resolved, the model is retrained with the real resolved issues stored in MongoDB.
-- **Confidence:** the predicted probability is stored on each issue as `classification_confidence`.
+---
 
-There are no keyword lists or if/else rules. To improve accuracy for your city, add more example sentences per department to `nlp_seed.py`.
+## Features
 
-## Similar report suggestions
+**Citizen**
+- Report an issue with a title, description, photo and map location (starts at your current location)
+- Track progress from reported to resolved, and see the before and after photos
+- Search issues across the city by name or address, and upvote them
 
-Before submitting, the new report is compared with open issues nearby (same TF-IDF feature space as the classifier, so word weights are stable) using cosine similarity. A report is suggested as a duplicate only when text similarity reaches `DUPLICATE_TEXT_THRESHOLD` (default 0.40) and it is within `DUPLICATE_RADIUS_METERS` (default 500). The citizen can then upvote the existing issue or submit anyway.
+**Official**
+- See every issue for their department and service area
+- Assign issues to workers of the same department and area
+- Map where markers get darker as upvotes increase
 
-## Technology
+**Worker**
+- See assigned tasks with the issue location
+- Upload a photo of the fixed issue
 
-- **Frontend:** React, Vite, Leaflet, React Leaflet, Lucide icons
-- **API:** FastAPI, Uvicorn
-- **Database:** MongoDB Atlas via PyMongo
-- **NLP:** scikit-learn TF-IDF + Logistic Regression, cosine similarity
-- **Photo storage:** Supabase Storage
+---
+
+## NLP
+
+| Task | Approach |
+|---|---|
+| Department routing | TF-IDF (words and character n-grams) with Logistic Regression, predicting 1 of 10 departments. No department picker for the citizen. |
+| Duplicate detection | TF-IDF cosine similarity plus a 500 m distance check, so citizens can upvote an existing issue instead of filing a copy. |
+| Self-improving | The model retrains from resolved issues at server start and after each resolution. |
+
+Training examples are in `backend/app/nlp_seed.py`. Add more examples there to improve accuracy.
+
+**Departments:** Road, Transport, Water, Waste, Electricity, Public Safety, Parks and Recreation, Drainage and Sewerage, Street Lighting, Public Buildings.
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, Leaflet, Axios |
+| Backend | FastAPI, JWT authentication, role-based access |
+| NLP | scikit-learn (TF-IDF, Logistic Regression) |
+| Database | MongoDB Atlas |
+| Storage | Supabase Storage |
+| Hosting | Render |
+
+---
 
 ## Run locally
 
-### Requirements
+**Requirements:** Python 3.11, Node.js 20, a MongoDB Atlas cluster, and a Supabase project with a public storage bucket.
 
-- Python 3.10 or newer
-- Node.js and npm
-- MongoDB Atlas connection string
-- Supabase project and Storage bucket
+### 1. Backend
 
-### 1. Configure the backend
-
-From the project root:
-
-```powershell
-Copy-Item backend/.env.example backend/.env
-```
-
-Set the values in `backend/.env`:
-
-| Variable | Purpose |
-| --- | --- |
-| `MONGODB_URL` | MongoDB Atlas connection string |
-| `MONGODB_DATABASE` | Database name (defaults to `fixora`) |
-| `JWT_SECRET_KEY` | Long, private signing secret |
-| `CORS_ORIGINS` | Frontend origin, typically `http://localhost:5173` |
-| `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Private backend-only Supabase service role key |
-| `SUPABASE_BUCKET` | Storage bucket name (defaults to `fixora-photos`) |
-| `DUPLICATE_TEXT_THRESHOLD` | Minimum TF-IDF cosine similarity for a duplicate suggestion |
-| `DUPLICATE_RADIUS_METERS` | Maximum distance for a duplicate suggestion |
-| `SERVICE_AREA_RADIUS_METERS` | Default official/worker service radius |
-
-Create the configured Supabase Storage bucket and set its access policy to match the app's photo URL behavior. Keep `backend/.env` and the service role key private. Never put the Supabase service role key in frontend environment variables.
-
-Install and start the API:
-
-```powershell
+```bash
 cd backend
-py -m venv .venv
-.venv\Scripts\Activate.ps1
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+cp .env.example .env             # then fill in the values
 uvicorn app.main:app --reload --port 8000
 ```
 
-FastAPI's interactive API documentation is available at `http://127.0.0.1:8000/docs`.
+### 2. Frontend
 
-### 2. Configure the frontend
-
-In a second terminal, from the project root:
-
-```powershell
-Copy-Item frontend/.env.example frontend/.env
+```bash
 cd frontend
 npm install
+echo "VITE_API_URL=http://127.0.0.1:8000" > .env
 npm run dev
 ```
 
-Open the local Vite URL printed in the terminal. `VITE_API_URL` should point to the FastAPI origin, such as `http://127.0.0.1:8000`, with no extra path prefix.
+Open `http://localhost:5173`.
 
-Create a production frontend build with:
+---
 
-```powershell
-npm run build
-```
+## Environment variables
 
-## Departments
+**backend/.env**
 
-Fixora ships with ten department profiles covering core city services, including roads, transport, water, sanitation, drainage, electricity, parks, public safety, street lighting, and public facilities. The department list is defined in `backend/app/main.py`; training examples are in `backend/app/nlp_seed.py`.
+| Variable | Purpose |
+|---|---|
+| `MONGODB_URL` | MongoDB Atlas connection string |
+| `MONGODB_DATABASE` | Database name |
+| `JWT_SECRET_KEY` | Secret used to sign login tokens |
+| `JWT_EXPIRE_HOURS` | Token lifetime |
+| `CORS_ORIGINS` | Frontend URL(s), comma separated |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server only) |
+| `SUPABASE_BUCKET` | Public bucket name for photos |
+| `DUPLICATE_TEXT_THRESHOLD` | Minimum text similarity for duplicates (default 0.40) |
+| `DUPLICATE_RADIUS_METERS` | Search radius for duplicates (default 500) |
 
-## Service-area matching
+**frontend/.env**
 
-Officials see reports assigned to their department and service area. Location coordinates are used with the configured service radius; area/address text is retained as a compatibility match where needed. Officials can assign reports to workers whose department and service area match. Worker accounts only receive reports assigned to them.
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | Backend URL, without a trailing slash |
 
-## Project structure
+Never commit `.env` files. They are already in `.gitignore`.
 
-```text
-backend/
-  app/main.py       FastAPI routes, persistence, NLP routing, and matching
-  requirements.txt
-  .env.example
-frontend/
-  src/              React application and shared styling
-  index.html
-  package.json
-  .env.example
-```
+---
 
-## Data and deployment notes
+## Real-world impact
 
-- The app does not seed example users, issues, or dashboard statistics; views are populated from the database.
-- Official and worker registration is open in this development scaffold. Add an approval process before using it for a public city deployment.
-- Set the default map center in the frontend to the target city before launch.
-- Review authentication, account onboarding, storage policies, CORS origins, and operational monitoring before production deployment.
+- **Faster reporting:** citizens describe the problem once and never need to know which department handles it.
+- **Less misrouted work:** NLP sends each report to the right team, so issues are not passed between offices.
+- **No duplicate effort:** nearby similar reports are caught early, and upvotes show what the community cares about most.
+- **Clear priorities:** officials see where problems cluster and which ones have the most support.
+- **Accountability:** every issue has a visible status, an assigned worker and a before and after photo.
+- **Local ownership:** officials and workers handle only the issues in their own department and area.
+
+> *A city is only as smart as the speed at which it listens and fixes.*
