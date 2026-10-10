@@ -1,6 +1,7 @@
 import os
 import re
 import logging
+import threading
 from datetime import datetime, timedelta, timezone
 from math import asin, cos, radians, sin, sqrt
 from typing import Literal, Optional
@@ -15,31 +16,14 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr, Field
 from pymongo import MongoClient, ReturnDocument
 from pymongo.errors import DuplicateKeyError
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from .nlp_engine import nlp
 
 load_dotenv()
 logger = logging.getLogger("fixora.uploads")
 
 DEPARTMENTS = ["Road Management", "Transport Management", "Water Management", "Waste Management", "Electricity Management", "Public Safety", "Parks & Recreation", "Drainage & Sewerage", "Street Lighting", "Public Buildings"]
-# TF-IDF learns feature weights from representative civic-service descriptions. At prediction
-# time the classifier compares the report with these learned department profiles.
-TRAINING = {
-    "Road Management": ["pothole cracked road damaged pavement broken asphalt road surface sinkhole road repair", "sidewalk footpath curb paving pedestrian pavement damage", "road marking crosswalk traffic sign damaged street sign lane marking"],
-    "Transport Management": ["bus route bus stop public transit delayed bus shelter damaged", "traffic congestion signal timing intersection traffic management", "train metro station transit service public transportation"],
-    "Water Management": ["water pipe leak burst pipe no water low water pressure drinking water supply", "water quality contaminated tap water water main repair", "hydrant leaking water service water connection"],
-    "Waste Management": ["garbage trash rubbish overflowing bin missed waste collection litter cleanup", "dumping debris bulky waste recycling pickup sanitation", "street litter overflowing trash can refuse removal"],
-    "Electricity Management": ["power outage electricity cable exposed electrical hazard transformer", "electric pole damaged power line down utility supply", "electrical box sparks power failure"],
-    "Public Safety": ["unsafe condition broken railing dangerous hazard public safety obstruction", "crime concern emergency safety hazard in public area", "damaged guard rail unsafe crossing safety concern"],
-    "Parks & Recreation": ["park playground equipment broken public garden tree maintenance", "damaged bench recreation field sports court park maintenance", "fallen tree park grass public green space"],
-    "Drainage & Sewerage": ["blocked drain storm water flooding sewer overflow manhole", "clogged catch basin street flooding drainage pipe", "sewage smell wastewater backup broken sewer"],
-    "Street Lighting": ["street light lamp post not working dark road lighting outage", "broken traffic light signal street lamp flickering", "pedestrian crossing light bulb street lighting repair"],
-    "Public Buildings": ["public library city hall community center building repair", "damaged public restroom civic facility maintenance", "municipal building door window roof repair"],
-}
-PROFILE_TEXTS = [" ".join(samples) for samples in TRAINING.values()]
-VECTORIZER = TfidfVectorizer(ngram_range=(1, 2), stop_words="english", sublinear_tf=True)
-PROFILE_MATRIX = VECTORIZER.fit_transform(PROFILE_TEXTS)
-DEPARTMENT_ORDER = list(TRAINING)
+# Department routing and duplicate detection live in nlp_engine.py (TF-IDF + Logistic Regression).
+
 
 mongo_url = os.getenv("MONGODB_URL") or os.getenv("MONGODB_URI")
 if mongo_url:
@@ -124,11 +108,22 @@ def require_role(*roles):
     return check
 
 def classify(title, description):
-    text = re.sub(r"\s+", " ", f"{title}. {description}").strip()
-    vector = VECTORIZER.transform([text])
-    scores = cosine_similarity(vector, PROFILE_MATRIX)[0]
-    idx = int(scores.argmax())
-    return DEPARTMENT_ORDER[idx], round(float(scores[idx]), 4)
+    department, confidence = nlp.classify(title, description)
+    return department, round(confidence, 4)
+
+def retrain_classifier():
+    """Learn from real resolved issues (their department was handled successfully)."""
+    if issues is None:
+        return
+    try:
+        rows = issues.find({"status": {"$in": ["resolved", "closed"]}}, {"title": 1, "description": 1, "department": 1}).limit(5000)
+        nlp.train([(r.get("title", ""), r.get("description", ""), r.get("department")) for r in rows])
+    except Exception:
+        logger.exception("Classifier retraining skipped")
+
+@app.on_event("startup")
+def _startup_train():
+    retrain_classifier()
 
 def distance_m(a_lat, a_lon, b_lat, b_lon):
     earth = 6371000
@@ -243,14 +238,12 @@ def check_similar(body: IssueBody, user=Depends(require_role("citizen"))):
     candidates = list(issues.find({"status": {"$nin": ["resolved", "closed"]}, "latitude": {"$gte": body.latitude - .02, "$lte": body.latitude + .02}, "longitude": {"$gte": body.longitude - .02, "$lte": body.longitude + .02}}).limit(200))
     if not candidates:
         return {"matches": []}
-    texts = [f"{body.title}. {body.description}"] + [f"{d['title']}. {d['description']}" for d in candidates]
-    matrix = TfidfVectorizer(ngram_range=(1, 2), stop_words="english", sublinear_tf=True).fit_transform(texts)
-    similarities = cosine_similarity(matrix[0:1], matrix[1:])[0]
+    similarities = nlp.similarities(body.title, body.description, [(d["title"], d["description"]) for d in candidates])
     matches = []
     for doc, similarity in zip(candidates, similarities):
         distance = distance_m(body.latitude, body.longitude, doc["latitude"], doc["longitude"])
         # Semantic overlap and proximity are both required. Scores are TF-IDF cosine similarity.
-        if similarity >= float(os.getenv("DUPLICATE_TEXT_THRESHOLD", ".34")) and distance <= float(os.getenv("DUPLICATE_RADIUS_METERS", "500")):
+        if similarity >= float(os.getenv("DUPLICATE_TEXT_THRESHOLD", ".40")) and distance <= float(os.getenv("DUPLICATE_RADIUS_METERS", "500")):
             item = issue_dict(doc, str(user["_id"]))
             item["distance_m"] = distance
             item["similarity"] = round(float(similarity), 3)
@@ -404,6 +397,7 @@ def resolve_issue(issue_id: str, body: ResolveBody, user=Depends(require_role("w
         raise HTTPException(422, "Upload a resolution photo before submitting the repair.")
     now = datetime.now(timezone.utc)
     issues.update_one({"_id": oid}, {"$set": {"status": "resolved", "resolution_photo_url": body.photo_url, "updated_at": now}, "$push": {"updates": {"status": "resolved", "message": "Worker uploaded the resolution photo.", "at": now.isoformat()}}})
+    threading.Thread(target=retrain_classifier, daemon=True).start()
     return {"ok": True, "status": "resolved", "resolution_photo_url": body.photo_url}
 
 @app.post("/uploads")

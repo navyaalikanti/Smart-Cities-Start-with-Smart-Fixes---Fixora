@@ -14,22 +14,25 @@ Fixora is a civic issue reporting and response platform. Residents report proble
 
 ## NLP-powered department routing
 
-Citizens do not choose a department when they submit a report. Fixora analyzes the report title and description with scikit-learn's `TfidfVectorizer`, representing words and two-word phrases as weighted text features. It compares that representation to text profiles for the ten city departments using cosine similarity, then routes the report to the department with the strongest match. The API also records the match confidence with the report.
+Citizens never choose a department. `backend/app/nlp_engine.py` runs a trained statistical model:
 
-This is statistical text matching rather than a hand-written keyword or rule-based router. The department profiles are in `backend/app/main.py`; for a real city, tune and validate them against local department responsibilities and labeled historical reports. The current vectorizer uses English stop words, so multilingual deployments should adapt the text processing and evaluation data.
+- **Features:** TF-IDF over words and two-word phrases, plus character 3-5 grams (so typos and unseen wording still match).
+- **Model:** multinomial Logistic Regression trained on `backend/app/nlp_seed.py` (about 250 labelled example reports across the ten departments).
+- **Self-improving:** at server start, and after every repair a worker marks resolved, the model is retrained with the real resolved issues stored in MongoDB.
+- **Confidence:** the predicted probability is stored on each issue as `classification_confidence`.
+
+There are no keyword lists or if/else rules. To improve accuracy for your city, add more example sentences per department to `nlp_seed.py`.
 
 ## Similar report suggestions
 
-Before submitting, Fixora compares a new report's title and description with existing reports using TF-IDF features and cosine similarity. A report is suggested as a possible duplicate only when it meets the configured text similarity threshold and is within the configured geographic radius. The citizen can then open and upvote the existing issue, or continue with a new report.
-
-The defaults are `DUPLICATE_TEXT_THRESHOLD=0.34` and `DUPLICATE_RADIUS_METERS=500`. These are starting points; adjust them using real reports and review false matches and missed duplicates before deployment.
+Before submitting, the new report is compared with open issues nearby (same TF-IDF feature space as the classifier, so word weights are stable) using cosine similarity. A report is suggested as a duplicate only when text similarity reaches `DUPLICATE_TEXT_THRESHOLD` (default 0.40) and it is within `DUPLICATE_RADIUS_METERS` (default 500). The citizen can then upvote the existing issue or submit anyway.
 
 ## Technology
 
 - **Frontend:** React, Vite, Leaflet, React Leaflet, Lucide icons
 - **API:** FastAPI, Uvicorn
 - **Database:** MongoDB Atlas via PyMongo
-- **Text matching:** scikit-learn TF-IDF and cosine similarity
+- **NLP:** scikit-learn TF-IDF + Logistic Regression, cosine similarity
 - **Photo storage:** Supabase Storage
 
 ## Run locally
@@ -99,7 +102,7 @@ npm run build
 
 ## Departments
 
-Fixora ships with ten department profiles covering core city services, including roads, transport, water, sanitation, drainage, electricity, parks, public safety, street lighting, and public facilities. The department list and matching descriptions are defined in `backend/app/main.py`.
+Fixora ships with ten department profiles covering core city services, including roads, transport, water, sanitation, drainage, electricity, parks, public safety, street lighting, and public facilities. The department list is defined in `backend/app/main.py`; training examples are in `backend/app/nlp_seed.py`.
 
 ## Service-area matching
 
